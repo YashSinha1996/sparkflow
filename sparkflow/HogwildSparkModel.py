@@ -145,7 +145,13 @@ class HogwildSparkModel(object):
         Get the url of the driver node. This is kind of crap on mac.
         """
         try:
-            master_url = socket.gethostbyname(socket.gethostname()) + ':5000'
+            hostname = socket.gethostname()
+            
+            if hostname.endswith('ec2.internal'):
+                ip_add = hostname.split('.')[0]
+                hostname = '.'.join(ip_add.split('-')[1:])
+
+            master_url = socket.gethostbyname(hostname) + ':5000'
             return master_url
         except:
             return 'localhost:5000'
